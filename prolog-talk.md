@@ -5,7 +5,6 @@ author:
   url: http://jordanscales.com
 output: index.html
 style: prolog-style.css
-controls: false
 
 --
 

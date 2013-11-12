@@ -30,3 +30,13 @@ code {
 em {
   border-bottom: 1px solid #666;
 }
+
+@media print {
+  body, pre code {
+    color: #222;
+  }
+
+  img {
+    width: 17%;
+  }
+}

@@ -36,7 +36,7 @@ Logic programming, instead, is *constraint-based*.
 
 We define *facts* and *rules*, then query our knowledge base to get a result.
 
-```prolog
+```erlang
 coder(jordan).
 coder(ryan).
 
@@ -53,14 +53,14 @@ This is also known as *declarative programming*.
 
 *Facts* are simple truths. Water is wet. Fire is hot.
 
-```prolog
+```erlang
 hot(fire).
 wet(water).
 ```
 
 Facts also have *arity*.
 
-```prolog
+```erlang
 age(jordan, 21).
 dob(jordan, 7, 20, 1992).
 ```
@@ -75,14 +75,14 @@ Notice these elements have no real type, only *arity*. These also do not
 *Rules* allow you to define truths using *logical inference*. They are declared
 in the form of:
 
-```prolog
+```erlang
 Head :- Body
 ```
 
 which states "The Head is true if Body is true." For instance, let's say a
 *junior coder* is a coder who is 21 years old.
 
-```prolog
+```erlang
 junior_coder(X) :- coder(X), age(X, 21).
 ```
 
@@ -90,7 +90,7 @@ junior_coder(X) :- coder(X), age(X, 21).
 
 ### Facts and Rules
 
-```prolog
+```erlang
 price(purse, 200).
 price(shoes, 75).
 price(candy, 2).
@@ -102,7 +102,7 @@ expensive(Item) :- price(Item, N), N > 50.
 Here we are saying an item is *expensive* if its price is greater than 50. We
 can then query our data set:
 
-```prolog
+```erlang
 ?- expensive(X).
 X = purse ;
 X = shoes ;
@@ -143,7 +143,7 @@ to make your statements correct.
 Prolog statements can contain patterns that are matched (or *unified*) to a
 given input. Consider a rule `same(A, B)` which is true if A and B are equal.
 
-```prolog
+```erlang
 same(A, B) :- A is B.
 
 ?- same(14, 14).
@@ -159,7 +159,7 @@ We can do better.
 
 ### Pattern Matching
 
-```prolog
+```erlang
 same(A, B) :- A is B.
 
 ... VS ...
@@ -182,7 +182,7 @@ They can be rewritten using *syntactic sugar* in the form of `[1, 2, 3, etc]`.
 
 We can implement pattern matching using the list's true form.
 
-```prolog
+```erlang
 starts_with_5([Head|Tail]) :- Head is 5.
 ```
 
@@ -190,7 +190,7 @@ starts_with_5([Head|Tail]) :- Head is 5.
 
 ### Matching on Lists
 
-```prolog
+```erlang
 starts_with_5([Head|Tail]) :- Head is 5.
 
 ?- starts_with_5([1,2,3]).
@@ -210,7 +210,7 @@ X = 5.
 Let's define a rule `all_equal/2` which is true if all elements in a list L
 are equal to N. We'll use *pattern matching* to accomplish this.
 
-```prolog
+```erlang
 all_equal([], _).
 all_equal([N|T], N) :- all_equal(T, N).
 ```
@@ -277,7 +277,7 @@ What are our constraints? Remember, be *explicit*.
 Let's write a rule to determine if a given list L is composed of elements which
 are all between A and B.
 
-```prolog
+```erlang
 all_between(_, _, []).
 all_between(A, B, [H|T]) :-
     between(A, B, H), all_between(A, B, T).
@@ -294,7 +294,7 @@ A and B and all remaining elements are between A and B.
 We need to determine if a list has no duplicate elements. We'll make use of
 `not/1`, `member/2`, and pattern matching to accomplish this.
 
-```prolog
+```erlang
 all_different([]).
 all_different([H|T]) :- not(member(H, T)), all_different(T).
 ```
@@ -310,7 +310,7 @@ remaining elements, and the remaining elements are all different.
 Using our rules from before, let's solve a 4x4 sudoku puzzle. We'll represent
 a puzzle as a list of items `[C11, C12, ..., C43, C44]`.
 
-```prolog
+```erlang
 sudoku([C11, C12, C13, C14,
         C21, C22, C23, C24,
         C31, C32, C33, C34,
@@ -327,7 +327,7 @@ sudoku([C11, C12, C13, C14,
 
 ### Putting it Together
 
-```prolog
+```erlang
 ...
 all_different([C21, C22, C23, C24]),
 all_different([C31, C32, C33, C34]),
@@ -354,7 +354,7 @@ all_different([C33, C34, C43, C44]).
 
 ![sudoku](sudoku2x2.gif)
 
-```prolog
+```erlang
 ?- sudoku([C11, C12, 4, C14,
            1, C22, C23, C24,
            C31, C32, C33, 3,

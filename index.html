@@ -19,18 +19,6 @@
   margin: 80px auto 0 auto;
 }
 
-/* styles for print layout */
-#wrapper.nohide {
-  overflow: auto;
-  height: auto;
-  box-shadow: none;
-}
-
-#wrapper.nohide .slide {
-  margin-bottom: 30px;
-}
-/* /styles */
-
 .slide {
   width: auto;
   height: 540px;
@@ -145,14 +133,6 @@ pre {
   line-height: 1.3;
 }
 
-code {
-  background-color: #e7e7e7;
-}
-
-pre > code {
-  background-color: inherit;
-}
-
 .progress {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -221,13 +201,72 @@ pre > code {
   }
 }
 
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  #wrapper {
+    overflow: visible;
+    height: 100%;
+    margin-top: 0;
+  }
+
+  .slide {
+    border: 1px solid #222;
+    margin-bottom: 40px;
+    height: 3.5in;
+  }
+
+  .slide:nth-child(odd) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
 /*
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 */
 
-pre code {
-  display: block; padding: 0.5em;
-  color: #333;
+code, pre {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: auto;
+  padding: 6px 10px;
+}
+
+code {
+  padding: 0 5px;
+}
+
+pre>code {
+  margin: 0; padding: 0;
+  border: none;
+  background: transparent;
 }
 
 pre .comment,
@@ -379,6 +418,16 @@ em {
   border-bottom: 1px solid #666;
 }
 
+@media print {
+  body, pre code {
+    color: #222;
+  }
+
+  img {
+    width: 17%;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -387,23 +436,23 @@ em {
   </div>
 
 <div id="wrapper">
-    <section class="slide"><h1>PROLOG</h1>
-<h2>Programming in a Logical World</h2>
+    <section class="slide"><h1 id="prolog">PROLOG</h1>
+<h2 id="programming-in-a-logical-world">Programming in a Logical World</h2>
 </section>
-    <section class="slide"><h3>What we&#39;re used to</h3>
+    <section class="slide"><h3 id="what-we-re-used-to">What we&#39;re used to</h3>
 <p>Most modern programming languages involve changing the program&#39;s <em>state</em> or
 general <em>control flow</em>.</p>
-<pre><code class="lang-javascript"><span class="function"><span class="title">if</span> <span class="params">(x == 'hello')</span> {
-  <span class="title">console</span>.<span class="title">log</span><span class="params">('<span class="variable">Hello</span>!')</span>;
-} <span class="title">else</span> {
-  <span class="title">console</span>.<span class="title">log</span><span class="params">('<span class="variable">Goodbye</span>!')</span>;
+<pre><code class="lang-javascript"><span class="keyword">if</span> (x == <span class="string">'hello'</span>) {
+  console.log(<span class="string">'Hello!'</span>);
+} <span class="keyword">else</span> {
+  console.log(<span class="string">'Goodbye!'</span>);
 }</code></pre>
 <p>We express <em>how</em> a program should accomplish a given task.</p>
 </section>
-    <section class="slide"><h3>What is Logic Programming?</h3>
+    <section class="slide"><h3 id="what-is-logic-programming-">What is Logic Programming?</h3>
 <p>Logic programming, instead, is <em>constraint-based</em>.</p>
 <p>We define <em>facts</em> and <em>rules</em>, then query our knowledge base to get a result.</p>
-<pre><code class="lang-prolog"><span class="function"><span class="title">coder</span><span class="params">(jordan)</span>.
+<pre><code class="lang-erlang"><span class="function"><span class="title">coder</span><span class="params">(jordan)</span>.
 <span class="title">coder</span><span class="params">(ryan)</span>.
 
 ?- <span class="title">coder</span><span class="params">(<span class="variable">X</span>)</span>.
@@ -411,39 +460,39 @@ X = <span class="title">jordan</span> ;
 X = <span class="title">ryan</span></code></pre>
 <p>This is also known as <em>declarative programming</em>.</p>
 </section>
-    <section class="slide"><h3>Facts and Rules</h3>
+    <section class="slide"><h3 id="facts-and-rules">Facts and Rules</h3>
 <p><em>Facts</em> are simple truths. Water is wet. Fire is hot.</p>
-<pre><code class="lang-prolog"><span class="function"><span class="title">hot</span><span class="params">(fire)</span>.
+<pre><code class="lang-erlang"><span class="function"><span class="title">hot</span><span class="params">(fire)</span>.
 <span class="title">wet</span><span class="params">(water)</span>.</code></pre>
 <p>Facts also have <em>arity</em>.</p>
-<pre><code class="lang-prolog"><span class="function"><span class="title">age</span><span class="params">(jordan, <span class="number">21</span>)</span>.
+<pre><code class="lang-erlang"><span class="function"><span class="title">age</span><span class="params">(jordan, <span class="number">21</span>)</span>.
 <span class="title">dob</span><span class="params">(jordan, <span class="number">7</span>, <span class="number">20</span>, <span class="number">1992</span>)</span>.</code></pre>
 <p>Notice these elements have no real type, only <em>arity</em>. These also do not
 <em>return</em> anything, they are true!</p>
 </section>
-    <section class="slide"><h3>Facts and Rules</h3>
+    <section class="slide"><h3 id="facts-and-rules">Facts and Rules</h3>
 <p><em>Rules</em> allow you to define truths using <em>logical inference</em>. They are declared
 in the form of:</p>
-<pre><code class="lang-prolog"><span class="title">Head</span> :- Body</code></pre>
+<pre><code class="lang-erlang"><span class="variable">Head</span> :- <span class="variable">Body</span></code></pre>
 <p>which states &quot;The Head is true if Body is true.&quot; For instance, let&#39;s say a
 <em>junior coder</em> is a coder who is 21 years old.</p>
-<pre><code class="lang-prolog">junior_coder(<span class="constant">X</span>) <span class="symbol">:-</span> coder(<span class="constant">X</span>), age(<span class="constant">X</span>, <span class="number">21</span>).</code></pre>
+<pre><code class="lang-erlang">junior_coder(X) :- coder(X), age(X, 21).</code></pre>
 </section>
-    <section class="slide"><h3>Facts and Rules</h3>
-<pre><code class="lang-prolog"><span class="title">price</span>(purse, <span class="number">200</span>).
-<span class="title">price</span>(shoes, <span class="number">75</span>).
-<span class="title">price</span>(candy, <span class="number">2</span>).
-<span class="title">price</span>(car, <span class="number">20000</span>).
+    <section class="slide"><h3 id="facts-and-rules">Facts and Rules</h3>
+<pre><code class="lang-erlang">price(purse, 200).
+price(shoes, 75).
+price(candy, 2).
+price(car, 20000).
 
-<span class="title">expensive</span>(<span class="type">Item</span>) :- price(<span class="type">Item</span>, <span class="type">N</span>), <span class="type">N</span> &gt; <span class="number">50.</span></code></pre>
+expensive(Item) :- price(Item, N), N &gt; 50.</code></pre>
 <p>Here we are saying an item is <em>expensive</em> if its price is greater than 50. We
 can then query our data set:</p>
-<pre><code class="lang-prolog">?- expensive(<span class="built_in">X</span>).
-<span class="built_in">X</span> = purse <span class="comment">;</span>
-<span class="built_in">X</span> = shoes <span class="comment">;</span>
-<span class="built_in">X</span> = car.</code></pre>
+<pre><code class="lang-erlang">?- expensive(<span class="variable">X</span>).
+<span class="variable">X</span> = purse ;
+<span class="variable">X</span> = shoes ;
+<span class="variable">X</span> = car.</code></pre>
 </section>
-    <section class="slide"><h3>Types in Prolog</h3>
+    <section class="slide"><h3 id="types-in-prolog">Types in Prolog</h3>
 <p><strong>atom</strong>: No real meaning, usually lowercase. (jordan, &#39;example&#39;)</p>
 <p><strong>number</strong>: Floats an integers.</p>
 <p><strong>variable</strong>: Strings of letters, numbers, and underscores beginning with an
@@ -451,7 +500,7 @@ uppercase letter or underscore. <em>Very similar to logic notation - placeholder
 <p><strong>compound term</strong>: A <em>functor</em> with a list of arguments. Used to represent
 collections of data.</p>
 </section>
-    <section class="slide"><h3>Types in Prolog</h3>
+    <section class="slide"><h3 id="types-in-prolog">Types in Prolog</h3>
 <p><strong>RECAP</strong></p>
 <p>Lowercase strings, such as <code>jordan</code>, or <code>water</code>, are known as atoms which hold
 no value other than their name.</p>
@@ -459,58 +508,58 @@ no value other than their name.</p>
 <em>unification</em> to assign values (atoms or numbers) to these variables in order
 to make your statements correct.</p>
 </section>
-    <section class="slide"><h3>Pattern Matching</h3>
+    <section class="slide"><h3 id="pattern-matching">Pattern Matching</h3>
 <p>Prolog statements can contain patterns that are matched (or <em>unified</em>) to a
 given input. Consider a rule <code>same(A, B)</code> which is true if A and B are equal.</p>
-<pre><code class="lang-prolog">same(A, B) :- A <span class="keyword">is</span> B.
+<pre><code class="lang-erlang">same(A, B) :- A is B.
 
-?- same(<span class="number">14</span>, <span class="number">14</span>).
-<span class="keyword">true</span>.
+?- same(14, 14).
+true.
 
-?- same(<span class="number">14</span>, <span class="number">13</span>).
-<span class="keyword">false</span>.</code></pre>
+?- same(14, 13).
+false.</code></pre>
 <p>We can do better.</p>
 </section>
-    <section class="slide"><h3>Pattern Matching</h3>
-<pre><code class="lang-prolog">same(A, B) :- A is B.
+    <section class="slide"><h3 id="pattern-matching">Pattern Matching</h3>
+<pre><code class="lang-erlang">same(A, B) :- A is B.
 
-<span class="keyword">...</span> VS <span class="keyword">...</span>
+... VS ...
 
 same(A, A).</code></pre>
 <p>If prolog fails to <em>unify</em> a given input to our statements, it will return
 false. <code>same(13, 14)</code> will <em>not match</em>, but <code>same(5, 5)</code> will.</p>
 <p><em>Note</em>: All items will match to &quot;_&quot;, which acts as a wildcard.</p>
 </section>
-    <section class="slide"><h3>Matching on Lists</h3>
+    <section class="slide"><h3 id="matching-on-lists">Matching on Lists</h3>
 <p>Lists in prolog are represented in the form of <code>[Head|Tail]</code>.</p>
 <p>They can be rewritten using <em>syntactic sugar</em> in the form of <code>[1, 2, 3, etc]</code>.</p>
 <p>We can implement pattern matching using the list&#39;s true form.</p>
-<pre><code class="lang-prolog"><span class="tag">starts_with_5</span>(<span class="attr_selector">[Head|Tail]</span>) <span class="pseudo">:-</span> <span class="tag">Head</span> <span class="tag">is</span> 5.</code></pre>
+<pre><code class="lang-erlang">starts_with_5([Head|Tail]) :- Head is 5.</code></pre>
 </section>
-    <section class="slide"><h3>Matching on Lists</h3>
-<pre><code class="lang-prolog">starts_with_5(<span class="matrix">[Head|Tail]</span>) :- Head is <span class="number">5.</span>
+    <section class="slide"><h3 id="matching-on-lists">Matching on Lists</h3>
+<pre><code class="lang-erlang">starts_with_5([Head|Tail]) :- Head is 5.
 
-?- starts_with_5(<span class="matrix">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span>).
-<span class="transposed_variable">false.</span>
+?- starts_with_5([1,2,3]).
+false.
 
-?- starts_with_5(<span class="matrix">[<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>]</span>).
-<span class="transposed_variable">true.</span>
+?- starts_with_5([5,6,7]).
+true.
 
-?- starts_with_5(<span class="matrix">[X,<span class="number">6</span>,<span class="number">7</span>]</span>).
-X = <span class="number">5.</span></code></pre>
+?- starts_with_5([X,6,7]).
+X = 5.</code></pre>
 </section>
-    <section class="slide"><h3>Putting it Together</h3>
+    <section class="slide"><h3 id="putting-it-together">Putting it Together</h3>
 <p>Let&#39;s define a rule <code>all_equal/2</code> which is true if all elements in a list L
 are equal to N. We&#39;ll use <em>pattern matching</em> to accomplish this.</p>
-<pre><code class="lang-prolog"><span class="tag">all_equal</span>(<span class="attr_selector">[]</span>, _).
-<span class="tag">all_equal</span>(<span class="attr_selector">[N|T]</span>, <span class="tag">N</span>) <span class="pseudo">:-</span> <span class="tag">all_equal</span>(<span class="tag">T</span>, <span class="tag">N</span>).</code></pre>
+<pre><code class="lang-erlang">all_equal([], _).
+all_equal([N|T], N) :- all_equal(T, N).</code></pre>
 <ul>
 <li>All elements in an empty list are equal to N.</li>
 <li>All elements in a list are equal to N if the first element is N and the
 remaining elements are all equal to N.</li>
 </ul>
 </section>
-    <section class="slide"><h3>Unification</h3>
+    <section class="slide"><h3 id="unification">Unification</h3>
 <p>Prolog uses a process called <em>unification</em> to solve problems.</p>
 <p>Rather than returning values, like many modern programming languages, queries
 will search your data intelligently in order to satisfy the conditions you have
@@ -518,7 +567,7 @@ specified.</p>
 <p>We did not tell our program to loop through our items, we simply <em>clearly</em>
 defined what it means to be expensive, and Prolog did the rest.</p>
 </section>
-    <section class="slide"><h3>What&#39;s Prolog good for?</h3>
+    <section class="slide"><h3 id="what-s-prolog-good-for-">What&#39;s Prolog good for?</h3>
 <p>Prolog shines when you are given a problem with clear <em>constraints</em>. Some
 examples include:</p>
 <ul>
@@ -529,13 +578,13 @@ examples include:</p>
 <p>It&#39;s also fun to use when solving logic puzzles such as the Eight Queens
 problem or grid puzzles. Let&#39;s take a stab at <em>Sudoku</em>.</p>
 </section>
-    <section class="slide"><h3>Sudoku</h3>
+    <section class="slide"><h3 id="sudoku">Sudoku</h3>
 <p>Let&#39;s try to solve the following Sudoku puzzle.</p>
 <p><img src="sudoku2x2.gif" width="200"></p>
 <p>First, let&#39;s form a notation to locate each individual cell. We&#39;ll say CXY
 points to the Yth cell in the Xth column. (C13 = 4).</p>
 </section>
-    <section class="slide"><h3>Sudoku</h3>
+    <section class="slide"><h3 id="sudoku">Sudoku</h3>
 <p><img src="sudoku2x2.gif" alt="sudoku"></p>
 <p>What are our constraints? Remember, be <em>explicit</em>.</p>
 <ul>
@@ -545,45 +594,45 @@ points to the Yth cell in the Xth column. (C13 = 4).</p>
 <li>All cells in an outlined 2x2 box must be different.</li>
 </ul>
 </section>
-    <section class="slide"><h3><code>all_between/3</code></h3>
+    <section class="slide"><h3 id="-all_between-3-"><code>all_between/3</code></h3>
 <p>Let&#39;s write a rule to determine if a given list L is composed of elements which
 are all between A and B.</p>
-<pre><code class="lang-prolog"><span class="tag">all_between</span>(_, _, <span class="attr_selector">[]</span>).
-<span class="tag">all_between</span>(<span class="tag">A</span>, <span class="tag">B</span>, <span class="attr_selector">[H|T]</span>) <span class="pseudo">:-</span>
-    <span class="tag">between</span>(<span class="tag">A</span>, <span class="tag">B</span>, <span class="tag">H</span>), <span class="tag">all_between</span>(<span class="tag">A</span>, <span class="tag">B</span>, <span class="tag">T</span>).</code></pre>
+<pre><code class="lang-erlang">all_between(_, _, []).
+all_between(A, B, [H|T]) :-
+    between(A, B, H), all_between(A, B, T).</code></pre>
 <ul>
 <li>All elements of an empty list are between A and B.</li>
 <li>All elements of a list are between A and B if the first element is between
 A and B and all remaining elements are between A and B.</li>
 </ul>
 </section>
-    <section class="slide"><h3><code>all_different/1</code></h3>
+    <section class="slide"><h3 id="-all_different-1-"><code>all_different/1</code></h3>
 <p>We need to determine if a list has no duplicate elements. We&#39;ll make use of
 <code>not/1</code>, <code>member/2</code>, and pattern matching to accomplish this.</p>
-<pre><code class="lang-prolog"><span class="tag">all_different</span>(<span class="attr_selector">[]</span>).
-<span class="tag">all_different</span>(<span class="attr_selector">[H|T]</span>) <span class="pseudo">:-</span> <span class="tag">not</span>(<span class="tag">member</span>(<span class="tag">H</span>, <span class="tag">T</span>)), <span class="tag">all_different</span>(<span class="tag">T</span>).</code></pre>
+<pre><code class="lang-erlang">all_different([]).
+all_different([H|T]) :- not(member(H, T)), all_different(T).</code></pre>
 <ul>
 <li>All elements of an empty list are different.</li>
 <li>All elements of a list are different if the first element is not one of the
 remaining elements, and the remaining elements are all different.</li>
 </ul>
 </section>
-    <section class="slide"><h3>Putting it Together</h3>
+    <section class="slide"><h3 id="putting-it-together">Putting it Together</h3>
 <p>Using our rules from before, let&#39;s solve a 4x4 sudoku puzzle. We&#39;ll represent
 a puzzle as a list of items <code>[C11, C12, ..., C43, C44]</code>.</p>
-<pre><code class="lang-prolog">sudoku([C11, C12, C13, C14,
+<pre><code class="lang-erlang">sudoku([C11, C12, C13, C14,
         C21, C22, C23, C24,
         C31, C32, C33, C34,
         C41, C42, C43, C44]) :-
 
-  all_between(<span class="number">1</span>, <span class="number">4</span>, [C11, C12, C13, C14,
+  all_between(1, 4, [C11, C12, C13, C14,
                      C21, C22, C23, C24,
                      C31, C32, C33, C34,
                      C41, C42, C43, C44]),
-  all_different([C11, C12, C13, C14]), <span class="keyword">...</span></code></pre>
+  all_different([C11, C12, C13, C14]), ...</code></pre>
 </section>
-    <section class="slide"><h3>Putting it Together</h3>
-<pre><code class="lang-prolog">...
+    <section class="slide"><h3 id="putting-it-together">Putting it Together</h3>
+<pre><code class="lang-erlang">...
 <span class="function"><span class="title">all_different</span><span class="params">([<span class="variable">C21</span>, <span class="variable">C22</span>, <span class="variable">C23</span>, <span class="variable">C24</span>])</span>,
 <span class="title">all_different</span><span class="params">([<span class="variable">C31</span>, <span class="variable">C32</span>, <span class="variable">C33</span>, <span class="variable">C34</span>])</span>,
 <span class="title">all_different</span><span class="params">([<span class="variable">C41</span>, <span class="variable">C42</span>, <span class="variable">C43</span>, <span class="variable">C44</span>])</span>,
@@ -599,28 +648,28 @@ a puzzle as a list of items <code>[C11, C12, ..., C43, C44]</code>.</p>
 <span class="title">all_different</span><span class="params">([<span class="variable">C33</span>, <span class="variable">C34</span>, <span class="variable">C43</span>, <span class="variable">C44</span>])</span>.</code></pre>
 <p>*exhale*</p>
 </section>
-    <section class="slide"><h3>Solving a Sudoku Puzzle</h3>
+    <section class="slide"><h3 id="solving-a-sudoku-puzzle">Solving a Sudoku Puzzle</h3>
 <p>23 lines later, we have a 4x4 Sudoku solver. Not bad!</p>
 <p><img src="sudoku2x2.gif" alt="sudoku"></p>
-<pre><code class="lang-prolog"><span class="comment">?</span>- <span class="comment">sudoku(</span>[<span class="comment">C11</span>, <span class="comment">C12</span>, <span class="comment">4</span>, <span class="comment">C14</span>,
-           <span class="comment">1</span>, <span class="comment">C22</span>, <span class="comment">C23</span>, <span class="comment">C24</span>,
-           <span class="comment">C31</span>, <span class="comment">C32</span>, <span class="comment">C33</span>, <span class="comment">3</span>,
-           <span class="comment">C41</span>, <span class="comment">1</span>, <span class="comment">C43</span>, <span class="comment">C44</span>]<span class="comment">)</span>.
-<span class="comment">C11</span> <span class="comment">=</span> <span class="comment">C24</span>, <span class="comment">C24</span> <span class="comment">=</span> <span class="comment">C32</span>, <span class="comment">C32</span> <span class="comment">=</span> <span class="comment">C43</span>, <span class="comment">C43</span> <span class="comment">=</span> <span class="comment">2</span>,
-<span class="comment">C12</span> <span class="comment">=</span> <span class="comment">C23</span>, <span class="comment">C23</span> <span class="comment">=</span> <span class="comment">C41</span>, <span class="comment">C41</span> <span class="comment">=</span> <span class="comment">3</span>,
-<span class="comment">C14</span> <span class="comment">=</span> <span class="comment">C33</span>, <span class="comment">C33</span> <span class="comment">=</span> <span class="comment">1</span>,
-<span class="comment">C22</span> <span class="comment">=</span> <span class="comment">C31</span>, <span class="comment">C31</span> <span class="comment">=</span> <span class="comment">C44</span>, <span class="comment">C44</span> <span class="comment">=</span> <span class="comment">4</span> <span class="string">.</span></code></pre>
+<pre><code class="lang-erlang">?- sudoku([<span class="variable">C11</span>, <span class="variable">C12</span>, <span class="number">4</span>, <span class="variable">C14</span>,
+           <span class="number">1</span>, <span class="variable">C22</span>, <span class="variable">C23</span>, <span class="variable">C24</span>,
+           <span class="variable">C31</span>, <span class="variable">C32</span>, <span class="variable">C33</span>, <span class="number">3</span>,
+           <span class="variable">C41</span>, <span class="number">1</span>, <span class="variable">C43</span>, <span class="variable">C44</span>]).
+<span class="variable">C11</span> = <span class="variable">C24</span>, <span class="variable">C24</span> = <span class="variable">C32</span>, <span class="variable">C32</span> = <span class="variable">C43</span>, <span class="variable">C43</span> = <span class="number">2</span>,
+<span class="variable">C12</span> = <span class="variable">C23</span>, <span class="variable">C23</span> = <span class="variable">C41</span>, <span class="variable">C41</span> = <span class="number">3</span>,
+<span class="variable">C14</span> = <span class="variable">C33</span>, <span class="variable">C33</span> = <span class="number">1</span>,
+<span class="variable">C22</span> = <span class="variable">C31</span>, <span class="variable">C31</span> = <span class="variable">C44</span>, <span class="variable">C44</span> = <span class="number">4</span> .</code></pre>
 </section>
-    <section class="slide"><h3>Solving a Sudoku Puzzle</h3>
+    <section class="slide"><h3 id="solving-a-sudoku-puzzle">Solving a Sudoku Puzzle</h3>
 <p><img src="sudoku2x2.gif" alt="sudoku"></p>
 <p>Prolog suggests the following solution:</p>
-<pre><code><span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">1</span>
-<span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">2</span>
-<span class="number">4</span> <span class="number">2</span> <span class="number">1</span> <span class="number">3</span>
-<span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">4</span></code></pre>
+<pre><code>2 3 4 1
+1 4 3 2
+4 2 1 3
+3 1 2 4</code></pre>
 <p>Which looks good!</p>
 </section>
-    <section class="slide"><h3>More Info</h3>
+    <section class="slide"><h3 id="more-info">More Info</h3>
 <p>My examples use SWI-Prolog (<a href="http://www.swi-prolog.org/">http://www.swi-prolog.org/</a>).</p>
 <p>Check out the <a href="http://en.wikipedia.org/wiki/Prolog">Wikipedia article</a> on
 Prolog for more details on its history and inner-workings.</p>
@@ -628,16 +677,16 @@ Prolog for more details on its history and inner-workings.</p>
 learning resource.</p>
 <p>I also can&#39;t recommend <a href="https://sites.google.com/site/prologsite/prolog-problems">99 Prolog Problems</a> enough.</p>
 </section>
-    <section class="slide"><h1>Questions?</h1>
-<h2><code>question(X) :- mentioned(X), not(explained(X)).</code></h2>
+    <section class="slide"><h1 id="questions-">Questions?</h1>
+<h2 id="-question-x-mentioned-x-not-explained-x-"><code>question(X) :- mentioned(X), not(explained(X)).</code></h2>
 </section>
     <section class="slide"><div class="author">
   <h1 class="name">Jordan Scales</h1>
     <h3 class="twitter">
-      <a href="http://twitter.com/@jdan" tabindex="-1">@jdan</a>
+      <a href="http://twitter.com/@jdan">@jdan</a>
     </h3>
     <h3 class="url">
-      <a href="http://jordanscales.com" tabindex="-1">http://jordanscales.com</a>
+      <a href="http://jordanscales.com">http://jordanscales.com</a>
     </h3>
 </div>
 </section>
@@ -647,8 +696,9 @@ learning resource.</p>
     <div class="arrow next"></div>
   </div>
 
-<script type="text/javascript">
-  /**
+
+  <script type="text/javascript">
+    /**
  * Takes the last slide and places it at the front.
  */
 function goBack() {
@@ -663,6 +713,7 @@ function goBack() {
 
   setCurrentProgress();
   updateURL();
+  updateTabIndex();
 }
 
 /**
@@ -680,6 +731,7 @@ function goForward() {
 
   setCurrentProgress();
   updateURL();
+  updateTabIndex();
 }
 
 /**
@@ -749,10 +801,32 @@ function goToPage(page) {
   }
 }
 
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var currentPageLinks = document.querySelector('.slide').querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    allLinks[i].removeAttribute('tabindex');
+  }
+}
+
 window.onload = function () {
 
   // Give each slide a "page" data attribute.
   setPageNumbers();
+
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
 
   // If the location hash specifies a page number, go to it.
   var page = window.location.hash.slice(1);
@@ -761,11 +835,11 @@ window.onload = function () {
   document.onkeydown = function (e) {
     var kc = e.keyCode;
 
-    // left, down, H, J, backspace - BACK
-    // up, right, K, L, space, enter - FORWARD
-    if (kc == 37 || kc == 40 || kc == 8 || kc == 72 || kc == 74) {
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, enter, PgDn - FORWARD
+    if (kc == 37 || kc == 40 || kc == 8 || kc == 72 || kc == 74 || kc == 33) {
       goBack();
-    } else if (kc == 38 || kc == 39 || kc == 13 || kc == 32 || kc == 75 || kc == 76) {
+    } else if (kc == 38 || kc == 39 || kc == 13 || kc == 32 || kc == 75 || kc == 76 || kc == 34) {
       goForward();
     }
   }
@@ -784,7 +858,7 @@ window.onload = function () {
 
 }
 
-</script>
 
+  </script>
 </body>
 </html>
